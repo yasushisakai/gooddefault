@@ -9,7 +9,7 @@ int main( ){
 
         settings.setGLVersion(3, 2);
         settings.setSize(1920, 1080);
-        // settings.windowMode = OF_GAME_MODE;
+        settings.windowMode = OF_GAME_MODE;
 
         ofCreateWindow(settings);
 

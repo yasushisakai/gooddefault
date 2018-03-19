@@ -7,54 +7,33 @@ void ofApp::setup(){
 
   ofEnableDepthTest();
 
-  // mlcsLogo.loadModel("mlcs.obj");
   mesh.load("mlcs.ply");
-
   shader.load("shaders/default");
-
-  light.setPosition(0, 100, 100);
-  
-  // ofRotateDeg(90, 1, 0, 0);
-  //
-  // mlcsLogo.setRotation(0, 180, 1, 0, 0);
-  // mlcsLogo.setRotation(1, 180, 0, 1, 0);
-  //
-  // mesh.setRotation(0, 180, 1, 0, 0);
-  
-  // float logoHeight = mlcsLogo.getSceneCenter().y;
-  // ofLogNotice() << mlcsLogo.getSceneCenter() << endl;
-  // mlcsLogo.setPosition(0, - logoHeight, 0);
-
-
-  // ofLogNotice() << ofGetHeight() << endl;
-  // mlcsLogo.setPosition(0 , - ofGetHeight() * 0.5, 0);
   
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-  // mesh.setRotation(1, 270 + ofGetElapsedTimef() * 60, 0, 1, 0);
-  // mlcsLogo.setRotation(1, 270 + ofGetElapsedTimef() * 60, 0, 1, 0);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
   cam.begin();
-
-  ofDrawAxis(32);
   ofSetColor(255);
   shader.begin();
-  // mlcsLogo.drawFaces();
+  
   ofPushMatrix();
-  ofRotateZDeg(90);
-  ofRotateXDeg(90);
+  ofScale(50, 50, 50);
+  ofTranslate(0.0, -3.5, 0.0);
+  ofRotateYDeg(180);
+  ofRotateYRad(sin(ofGetElapsedTimef()) + PI * 0.25);
   mesh.draw();
   ofPopMatrix();
-  // ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-  shader.end();
-  cam.end();
 
+  shader.end();
+
+  ofDrawAxis(100);
+  cam.end();
 }
 
 //--------------------------------------------------------------
