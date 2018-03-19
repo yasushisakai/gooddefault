@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxAssimpModelLoader.h"
 
 class ofApp : public ofBaseApp{
 	public:
@@ -19,4 +20,11 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+                // ofxAssimpModelLoader mlcsLogo;
+                ofMesh mesh;
+                ofLight light;
+                ofShader shader;
+
+                ofEasyCam cam;
 };
