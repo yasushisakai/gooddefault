@@ -4,12 +4,14 @@
 void ofApp::setup(){
   ofBackground(0);
   ofSetVerticalSync(true);
+  light = ofNode();
 
-  ofEnableDepthTest();
+  light.setPosition(200, 200, 200);
 
   mesh.load("mlcs.ply");
+  // mesh.enableNormals();
   shader.load("shaders/default");
-  
+  shader.setUniform3f("lightPos", light.getPosition());
 }
 
 //--------------------------------------------------------------
@@ -24,16 +26,27 @@ void ofApp::draw(){
   
   ofPushMatrix();
   ofScale(50, 50, 50);
-  ofTranslate(0.0, -3.5, 0.0);
   ofRotateYDeg(180);
   ofRotateYRad(sin(ofGetElapsedTimef()) + PI * 0.25);
+  ofTranslate(0.0, -3.5, 0.0);
+  shader.setUniformMatrix4f("MV", cam.getModelViewMatrix());
   mesh.draw();
   ofPopMatrix();
 
   shader.end();
 
   ofDrawAxis(100);
+  ofVec3f lightScreenPos = cam.worldToScreen(light.getPosition());
   cam.end();
+
+  // indicating the light position
+  ofNoFill();
+  ofDrawLine(lightScreenPos.x - 5, lightScreenPos.y, lightScreenPos.x + 5, lightScreenPos.y);
+  ofDrawLine(lightScreenPos.x, lightScreenPos.y -5 , lightScreenPos.x, lightScreenPos.y + 5);
+  stringstream ss;
+
+  ss << "light" << endl;
+  ofDrawBitmapString(ss.str().c_str(), lightScreenPos.x + 10, lightScreenPos.y + 10);
 }
 
 //--------------------------------------------------------------

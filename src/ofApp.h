@@ -21,7 +21,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
                 ofMesh mesh;
-                ofLight light;
+                ofNode light;
                 ofShader shader;
 
                 ofEasyCam cam;
