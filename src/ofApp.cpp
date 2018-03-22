@@ -9,7 +9,6 @@ void ofApp::setup(){
   light.setPosition(200, 200, 200);
 
   mesh.load("mlcs.ply");
-  // mesh.enableNormals();
   shader.load("shaders/default");
   shader.setUniform3f("lightPos", light.getPosition());
 }
@@ -23,21 +22,17 @@ void ofApp::draw(){
   cam.begin();
   ofSetColor(255);
   shader.begin();
-  
-  ofPushMatrix();
-  ofScale(50, 50, 50);
-  ofRotateYDeg(180);
-  ofRotateYRad(sin(ofGetElapsedTimef()) + PI * 0.25);
-  ofTranslate(0.0, -3.5, 0.0);
-  shader.setUniformMatrix4f("MV", cam.getModelViewMatrix());
   mesh.draw();
-  ofPopMatrix();
-
   shader.end();
-
   ofDrawAxis(100);
   ofVec3f lightScreenPos = cam.worldToScreen(light.getPosition());
   cam.end();
+
+  // fps
+  stringstream fpss;
+
+  fpss << "fps: " << ofGetFrameRate();
+  ofDrawBitmapString(fpss.str().c_str(), 10, 20);
 
   // indicating the light position
   ofNoFill();
