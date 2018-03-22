@@ -6,11 +6,29 @@ void ofApp::setup(){
   ofSetVerticalSync(true);
   light = ofNode();
 
-  light.setPosition(200, 200, 200);
+  light.setPosition(100, 100, 100);
 
   mesh.load("mlcs.ply");
   shader.load("shaders/default");
   shader.setUniform3f("lightPos", light.getPosition());
+
+
+  //------------------------------ 
+  // camera
+  cam.setFov(60);
+  cam.setAspectRatio((float)ofGetWidth() / (float)ofGetHeight());
+  cam.setNearClip(0.1);
+  cam.setFarClip(500.0);
+  cam.setPosition(0, 0, 500.0);
+  cam.lookAt(ofVec3f());
+
+  ofLogNotice() << "mvp: \n" << cam.getProjectionMatrix() << endl;
+
+  glm::mat4 mvp = ofGetCurrentMatrix(ofMatrixMode::OF_MATRIX_PROJECTION);
+
+  ofLogNotice() << "mvp: \n" << mvp << endl;
+  // ofLogNotice() << "mv(cam): \n" << cam.getProjectionMatrix() << endl;
+
 }
 
 //--------------------------------------------------------------
@@ -19,6 +37,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+
+  // inefficient but lets do this in draw
+  
+  shader.setUniformMatrix4f("P", ofGetCurrentMatrix(OF_MATRIX_PROJECTION));
+  shader.setUniformMatrix4f("MV", ofGetCurrentMatrix(OF_MATRIX_MODELVIEW));
+
   cam.begin();
   ofSetColor(255);
   shader.begin();

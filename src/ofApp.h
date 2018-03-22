@@ -24,6 +24,6 @@ class ofApp : public ofBaseApp{
                 ofNode light;
                 ofShader shader;
 
-                ofEasyCam cam;
+                ofCamera cam;
                 uint64_t timeElapsed;
 };
