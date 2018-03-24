@@ -1,6 +1,7 @@
-#version 150
+#version 330
 
 uniform vec3 lightPos;
+uniform float lightIntensity;
 
 in vec3 lightDir;
 in vec3 vNormal;
@@ -10,19 +11,21 @@ out vec4 color;
 
 void main()
 {
+  
+  // should this be uniform??
   vec3 matColor = vec3(1.0);
 
+  //================================================== 
+  // ambient
+  vec3 ambient = matColor * 0.1;
 
+  //================================================== 
+  // diffuse
   float cosTheta = max(0.0, dot(normalize(lightDir), normalize(vNormal)));
+  float d = distance(lightPos, vPos); //light to frag pos
+  float a = lightIntensity * cosTheta / (d * d);
+  vec3 diffuse = matColor * a;
 
-  float d = distance(lightPos, vPos);
-
-  vec3 ambientColor = matColor * 0.2 / d;
-
-  float attenuation = 3 * cosTheta / d;
-
-  // color = vec4(matColor*cosTheta, 1.0);
-  // color = vec4(1.0 * cosTheta, 1.0 * cosTheta, 1.0 * cosTheta, 1.0);
-  color = vec4(ambientColor + matColor * attenuation, 1.0);
+  color = vec4(ambient + diffuse, 1.0);
 
 }

@@ -1,4 +1,4 @@
-#version 150
+#version 330
 
 uniform mat4 modelViewProjectionMatrix;
 uniform vec3 lightPos;
@@ -12,6 +12,7 @@ out vec3 vPos;
 
 void main()
 {
+
   lightDir = lightPos - position.xyz; 
   vPos = position.xyz;
   vNormal = normal.xyz;

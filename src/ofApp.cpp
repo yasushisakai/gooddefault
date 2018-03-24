@@ -20,6 +20,7 @@ void ofApp::setup(){
   shader.bindDefaults();
   shader.begin();
   shader.setUniform3f("lightPos", light.getPosition());
+  shader.setUniform1f("lightIntensity", 5);
   shader.end();
 
   }
