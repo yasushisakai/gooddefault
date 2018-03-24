@@ -2,32 +2,63 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+
   ofBackground(0);
   ofSetVerticalSync(true);
-  light = ofNode();
+  ofEnableDepthTest();
 
-  light.setPosition(100, 100, 100);
+  shader.load("shader/default");
+  shader.bindDefaults();
 
-  mesh.load("mlcs.ply");
-  shader.load("shaders/default");
+  // mesh
+  glm::vec3 a{};
+  glm::vec3 b{1.0, 0.0, 0.0};
+  glm::vec3 c{0.0, 0.0, 1.0};
+  glm::vec3 d{0.0, 1.0, 0.0};
+
+  glm::vec3 normal = glm::triangleNormal(a, c, b);
+  glm::vec3 normal2 = glm::triangleNormal(a, d, c);
+  ofLogNotice() << "normal glm: " << normal << endl;
+
+  // ofVec3f normal = ((b - a).cross(c - a)).normalize();
+
+  mesh.addVertex(a);
+  mesh.addNormal(normal);
+  mesh.addVertex(b);
+  mesh.addNormal(normal);
+  mesh.addVertex(c);
+  mesh.addNormal(normal);
+  mesh.addVertex(a);
+  mesh.addNormal(normal2);
+  mesh.addVertex(d);
+  mesh.addNormal(normal2);
+  mesh.addVertex(c);
+  mesh.addNormal(normal2);
+
+  mesh.addIndex(0);
+  mesh.addIndex(1);
+  mesh.addIndex(2);
+  mesh.addIndex(3);
+  mesh.addIndex(4);
+  mesh.addIndex(5);
+
+  // light (just a node)
+  light.setPosition(ofVec3f(3, 4, 5));
+  shader.begin();
   shader.setUniform3f("lightPos", light.getPosition());
+  shader.end();
 
+  glm::vec3 center{(glm::vec3)mesh.getCentroid()};
+  ofLogNotice() << "center: " << center << endl;
 
-  //------------------------------ 
-  // camera
-  cam.setFov(60);
-  cam.setAspectRatio((float)ofGetWidth() / (float)ofGetHeight());
-  cam.setNearClip(0.1);
-  cam.setFarClip(500.0);
-  cam.setPosition(0, 0, 500.0);
-  cam.lookAt(ofVec3f());
+  ofLogNotice() << light.getPosition() << endl;
 
-  ofLogNotice() << "mvp: \n" << cam.getProjectionMatrix() << endl;
+  // ofLogNotice() << mesh.getNormal(0) << endl;
 
-  glm::mat4 mvp = ofGetCurrentMatrix(ofMatrixMode::OF_MATRIX_PROJECTION);
+  glm::vec3 lightDir{glm::normalize((glm::vec3)light.getPosition() - center)};
 
-  ofLogNotice() << "mvp: \n" << mvp << endl;
-  // ofLogNotice() << "mv(cam): \n" << cam.getProjectionMatrix() << endl;
+  cosTheta = dot(lightDir, normal);
+  ofLogNotice() << "cosTheta: " << cosTheta << " angle: " << glm::acos(cosTheta) / PI * 180.0 << endl;
 
 }
 
@@ -38,31 +69,33 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-  // inefficient but lets do this in draw
-  
-  shader.setUniformMatrix4f("P", ofGetCurrentMatrix(OF_MATRIX_PROJECTION));
-  shader.setUniformMatrix4f("MV", ofGetCurrentMatrix(OF_MATRIX_MODELVIEW));
-
   cam.begin();
+  // ofSetColor((int)(cosTheta * 255));
   ofSetColor(255);
+  ofFill();
   shader.begin();
-  mesh.draw();
+  // mesh.draw();
+  ofDrawSphere(0, 0, 0, 2);
   shader.end();
-  ofDrawAxis(100);
-  ofVec3f lightScreenPos = cam.worldToScreen(light.getPosition());
+
+  ofSetColor(255, 255, 0);
+
+  ofVec3f c{mesh.getCentroid()};
+  ofVec3f n{0, 1, 0};
+
+  ofDrawAxis(5.0f);
+  ofPoint lightScreenPos = cam.worldToScreen(light.getPosition());
   cam.end();
 
-  // fps
-  stringstream fpss;
-
-  fpss << "fps: " << ofGetFrameRate();
-  ofDrawBitmapString(fpss.str().c_str(), 10, 20);
-
-  // indicating the light position
-  ofNoFill();
-  ofDrawLine(lightScreenPos.x - 5, lightScreenPos.y, lightScreenPos.x + 5, lightScreenPos.y);
-  ofDrawLine(lightScreenPos.x, lightScreenPos.y -5 , lightScreenPos.x, lightScreenPos.y + 5);
+  ofSetColor(255);
   stringstream ss;
+  ss << "framerate: " << ofGetFrameRate() << endl;
+  ss << "cosTheta: " << cosTheta << endl;
+
+  ofDrawBitmapString(ss.str().c_str(), 10, 20);
+  ss.str(string());
+
+  ofDrawCircle(lightScreenPos.x, lightScreenPos.y, 3);
 
   ss << "light" << endl;
   ofDrawBitmapString(ss.str().c_str(), lightScreenPos.x + 10, lightScreenPos.y + 10);
@@ -75,6 +108,7 @@ void ofApp::keyPressed(int key){
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
+
 }
 
 //--------------------------------------------------------------
@@ -120,4 +154,8 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+void ofApp::drawLine(ofVec3f s, ofVec3f e) {
+  ofGetCurrentRenderer() -> drawLine(s.x, s.y, s.z, e.x, e.y, e.z);
 }

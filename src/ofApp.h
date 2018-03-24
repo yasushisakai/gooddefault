@@ -20,10 +20,11 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-                ofMesh mesh;
-                ofNode light;
-                ofShader shader;
+                void drawLine(ofVec3f, ofVec3f);
 
-                ofCamera cam;
-                uint64_t timeElapsed;
+                ofMesh mesh;
+                float cosTheta;
+                ofEasyCam cam;
+                ofShader shader;
+                ofNode light;
 };
