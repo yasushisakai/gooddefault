@@ -23,7 +23,6 @@ class ofApp : public ofBaseApp{
                 void drawLine(ofVec3f, ofVec3f);
 
                 ofMesh mesh;
-                float cosTheta;
                 ofEasyCam cam;
                 ofShader shader;
                 ofNode light;
