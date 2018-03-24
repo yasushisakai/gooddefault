@@ -59,7 +59,6 @@ void ofApp::setup(){
 
   cosTheta = dot(lightDir, normal);
   ofLogNotice() << "cosTheta: " << cosTheta << " angle: " << glm::acos(cosTheta) / PI * 180.0 << endl;
-
 }
 
 //--------------------------------------------------------------
