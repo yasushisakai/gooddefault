@@ -4,7 +4,16 @@
 void ofApp::setup(){
   ofBackground(0);
   ofSetVerticalSync(true);
+  ofEnableDepthTest();
 
+  ofFbo::Settings settings;
+  settings.width = ofGetWidth();
+  settings.height = ofGetHeight();
+  settings.internalformat = GL_RGB;
+  settings.useDepth = true;
+  settings.depthStencilAsTexture = true;
+  fbo.allocate(settings);
+  
   // mesh
   mesh.load("mlcs.ply");
 
@@ -12,18 +21,13 @@ void ofApp::setup(){
   cam.setTarget(ofVec3f());
   cam.setDistance(15);
 
-  // light
-  light.setPosition(ofVec3f(3, 4, 5));
-
   // set variable for shaders
-  shader.load("shader/default");
-  shader.bindDefaults();
+  shader.load("shader/depth");
   shader.begin();
-  shader.setUniform3f("lightPos", light.getPosition());
-  shader.setUniform1f("lightIntensity", 5);
+  shader.setUniform1f("height", (float)ofGetHeight());
   shader.end();
 
-  }
+}
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -32,40 +36,26 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-  ofEnableDepthTest();
-
-  cam.begin();
   ofSetColor(255);
-  ofFill();
+
+  fbo.begin();
+    cam.begin();
+      ofClear(0);
+      mesh.draw();
+    cam.end();
+  fbo.end();
+
   shader.begin();
-  // ofDrawSphere(0, 0, 0, 2);
-  mesh.draw();
+    shader.setUniformTexture("dTex", fbo.getDepthTexture(),1);
+    fbo.draw(0, 0);
   shader.end();
 
-  ofSetColor(255, 255, 0);
-
-  ofDrawAxis(5.0f);
-  ofPoint lightScreenPos = cam.worldToScreen(light.getPosition());
-  cam.end();
-
-  ofDisableDepthTest();
-
-  ofSetColor(255);
   stringstream ss;
+
   ss << "framerate: " << ofGetFrameRate() << endl;
 
   ofDrawBitmapString(ss.str().c_str(), 10, 20);
-  ss.str(string()); // clear ss
 
-  // draw * for light
-  ofDrawLine(lightScreenPos.x +  5, lightScreenPos.y +  5, lightScreenPos.x + -5, lightScreenPos.y + -5);
-  ofDrawLine(lightScreenPos.x + -5, lightScreenPos.y +  5, lightScreenPos.x +  5, lightScreenPos.y + -5);
-  ofDrawLine(lightScreenPos.x, lightScreenPos.y +  5, lightScreenPos.x, lightScreenPos.y + -5);
-  ofDrawLine(lightScreenPos.x + -5, lightScreenPos.y, lightScreenPos.x +  5, lightScreenPos.y);
-
-
-  ss << "light" << endl;
-  ofDrawBitmapString(ss.str().c_str(), lightScreenPos.x + 10, lightScreenPos.y + 10);
 }
 
 //--------------------------------------------------------------
