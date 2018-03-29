@@ -5,28 +5,30 @@ void ofApp::setup(){
   ofBackground(0);
   ofSetVerticalSync(true);
 
-  // mesh
+  // logo
+  ofMesh mesh;
   mesh.load("mlcs.ply");
+  logo = of3dPrimitive(mesh);
+
+  // light
+  light.setGlobalPosition(ofVec3f(3, 4, 5));
 
   // cam
   cam.setTarget(ofVec3f());
-  cam.setDistance(15);
-
-  // light
-  light.setPosition(ofVec3f(3, 4, 5));
+  cam.setDistance(30);
 
   // set variable for shaders
   shader.load("shader/default");
-  shader.bindDefaults();
   shader.begin();
-  shader.setUniform3f("lightPos", light.getPosition());
-  shader.setUniform1f("lightIntensity", 5);
+    shader.setUniform3f("lightPos", light.getPosition());
+    shader.setUniform1f("lightIntensity", 5.0f);
   shader.end();
 
   }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+  logo.rotateDeg(0.5, ofVec3f(0, 1, 0));
 }
 
 //--------------------------------------------------------------
@@ -34,19 +36,19 @@ void ofApp::draw(){
 
   ofEnableDepthTest();
 
-  cam.begin();
-  ofSetColor(255);
-  ofFill();
   shader.begin();
-  // ofDrawSphere(0, 0, 0, 2);
-  mesh.draw();
+    cam.begin();
+    ofSetColor(255);
+    ofFill();
+      logo.draw();
+    shader.end();
+
+    ofSetColor(255, 255, 0);
+
+    ofDrawAxis(5.0f);
+    ofPoint lightScreenPos = cam.worldToScreen(light.getPosition());
+    cam.end();
   shader.end();
-
-  ofSetColor(255, 255, 0);
-
-  ofDrawAxis(5.0f);
-  ofPoint lightScreenPos = cam.worldToScreen(light.getPosition());
-  cam.end();
 
   ofDisableDepthTest();
 

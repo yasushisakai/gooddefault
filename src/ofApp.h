@@ -22,7 +22,8 @@ class ofApp : public ofBaseApp{
 
                 void drawLine(ofVec3f, ofVec3f);
 
-                ofMesh mesh;
+                of3dPrimitive logo;
+                float angle;
                 ofEasyCam cam;
                 ofShader shader;
                 ofNode light;
