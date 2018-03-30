@@ -21,7 +21,7 @@ void ofApp::setup(){
   shader.load("shader/default");
   shader.begin();
     shader.setUniform3f("lightPos", light.getPosition());
-    shader.setUniform1f("lightIntensity", 5.0f);
+    shader.setUniform1f("attenuation", 0.25f);
   shader.end();
 
   }
@@ -38,7 +38,7 @@ void ofApp::draw(){
 
   shader.begin();
     cam.begin();
-    ofSetColor(255);
+    ofSetColor(10);
     ofFill();
       logo.draw();
     shader.end();

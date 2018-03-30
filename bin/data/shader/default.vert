@@ -10,24 +10,17 @@ uniform vec3 lightPos;
 in vec4 normal;
 in vec4 position;
 
-// out vec3 lightDir;
-out vec3 normalCam;
-out vec3 lightDirCam;
-out vec3 eyeCam;
 out vec3 vPos;
+out float vCosTheta;
 
 void main()
 {
   gl_Position = modelViewProjectionMatrix * position;
   // p * v * m works 
-
+  
   vPos = (modelMatrix * position).xyz;
-
-  vec3 vPosCam = (modelViewMatrix * position).xyz;
-  eyeCam = vec3(0,0,0) - vPos;
-
-  vec3 lightPosCam = (viewMatrix * vec4(lightPos, 1.0)).xyz;
-  lightDirCam = lightPosCam + eyeCam;
-
-  normalCam = (modelViewMatrix * normal).xyz;
+  vec3 lightdir = lightPos - vPos;
+  vec3 vNormal = (modelMatrix * normal).xyz;
+  
+  vCosTheta = max(0.0, dot(normalize(lightdir), normalize(vNormal)));
 }
