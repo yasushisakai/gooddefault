@@ -21,3 +21,11 @@ TODO: consider [deferred rendering approach?](https://github.com/nama-gatsuo/ofx
   - Y Up
 
 - [ofProgrammableShader uniforms](https://forum.openframeworks.cc/t/ofshader-given-glsl-variables/16567/2)
+
+- how many passes do I need?
+  - geom pass
+    - first pass to get the position, normal, depth, albedo? <- do we need this??
+  - shadow pass
+    - second pass makes the shadow map (which creates an ortho projection)
+  - SSAO and integration pass
+    - third pass applies SSAO and calculates the overall color (ambient + diffuse)
