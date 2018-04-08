@@ -5,6 +5,7 @@ void ofApp::setup(){
   ofBackground(0);
   ofSetVerticalSync(true);
   ofEnableDepthTest();
+  ofSetFrameRate(30);
 
   // logo
   ofMesh mesh;
@@ -52,13 +53,16 @@ void ofApp::setup(){
 
   ofLogNotice() << cam.getNearClip() << endl;
   ofLogNotice() << cam.getFarClip() << endl;
-
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
   logo.rotateDeg(0.5, ofVec3f(0, 1, 0));
+}
 
+//--------------------------------------------------------------
+void ofApp::draw(){
+  
   ofEnableDepthTest();
   
   geomFbo.begin();
@@ -74,12 +78,6 @@ void ofApp::update(){
       cam.end();
     geomShader.end();
   geomFbo.end();
-
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::draw(){
 
   shader.begin();
     cam.begin();

@@ -40,5 +40,5 @@ void main () {
 
   outputColor1 = vec4(n, 1.0); // BUFFER_TYPE_NORMAL
 
-  outputColor2 = vec4(camPos.y, 0.0, 0.0, 1.0); // BUFFER_TYPE_DEPTH
+  outputColor2 = vec4(vec3(abs(camPos.z / (farClip - nearClip))), 1.0); // BUFFER_TYPE_DEPTH
 }
