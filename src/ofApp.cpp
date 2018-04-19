@@ -34,7 +34,7 @@ void ofApp::setup(){
   geomFbo.allocate(s);
 
   // light
-  light.setGlobalPosition(ofVec3f(3, 4, 5));
+  light.setPosition(ofVec3f(3, 4, 5));
 
   // cam
   cam.setTarget(ofVec3f());

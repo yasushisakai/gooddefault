@@ -25,7 +25,6 @@ vec3 remapNormal (vec3 normal) {
       );
 }
 
-
 void main () {
 
   float y =  768 - gl_FragCoord.y; // TODO: hardcoding the height (it's flipped)
