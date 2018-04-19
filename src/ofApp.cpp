@@ -42,11 +42,13 @@ void ofApp::setup(){
   // cam.setNearClip(0.1);
   // cam.setFarClip(10);
 
-  shader.load("shader/geom");
-  shader.begin();
-    shader.setUniform1f("nearClip", cam.getNearClip());
-    shader.setUniform1f("farClip", cam.getFarClip());
-  shader.end();
+  geomShader.load("shader/geom");
+  geomShader.begin();
+    geomShader.setUniform1f("nearClip", cam.getNearClip());
+    geomShader.setUniform1f("farClip", cam.getFarClip());
+  geomShader.end();
+
+  shader.load("shader/default");
 
   ofLogNotice() << cam.getNearClip() << endl;
   ofLogNotice() << cam.getFarClip() << endl;
@@ -66,11 +68,11 @@ void ofApp::update(){
     bufferId.push_back(BUFFER_TYPE_DEPTH);
     geomFbo.setActiveDrawBuffers(bufferId);
     ofClear(0);
-    shader.begin();
+    geomShader.begin();
       cam.begin();
         logo.draw();
       cam.end();
-    shader.end();
+    geomShader.end();
   geomFbo.end();
     
 }
@@ -78,9 +80,16 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-  geomFbo.getTexture(2).draw(0, 0);
+  shader.begin();
+    shader.setUniformTexture("colorTex", geomFbo.getTexture(0), 0);
+    cam.begin();
+      logo.draw();
+    cam.end();
+  shader.end();
+  // geomFbo.getTexture(0).draw(0, 0);
   // geomFbo.getDepthTexture().draw(0, 0);
 
+  
   ofDisableDepthTest();
 
   ofSetColor(255);

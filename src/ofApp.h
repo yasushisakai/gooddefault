@@ -13,6 +13,7 @@ class ofApp : public ofBaseApp{
 
                 float angle;
                 ofEasyCam cam;
+                ofShader geomShader;
                 ofShader shader;
                 ofNode light;
 
