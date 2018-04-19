@@ -81,8 +81,10 @@ void ofApp::update(){
 void ofApp::draw(){
 
   shader.begin();
-    shader.setUniformTexture("colorTex", geomFbo.getTexture(0), 0);
     cam.begin();
+    shader.setUniformTexture("colorTex", geomFbo.getTexture(0), 0);
+    shader.setUniformTexture("normalTex", geomFbo.getTexture(1), 1);
+    shader.setUniformTexture("depthTex", geomFbo.getDepthTexture(), 2);
       logo.draw();
     cam.end();
   shader.end();
