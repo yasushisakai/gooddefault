@@ -4,6 +4,8 @@ uniform sampler2DRect colorTex;
 uniform sampler2DRect normalTex;
 uniform sampler2DRect depthTex;
 
+in vec3 lightDir;
+
 out vec4 resultColor;
 
 float map(
@@ -33,6 +35,8 @@ void main () {
   vec3 normal = remapNormal(texture(normalTex, vec2(gl_FragCoord.x, y)).rbg);
   float depth = texture(depthTex, vec2(gl_FragCoord.x, y)).r;
 
-  resultColor = vec4(normal, 1.0);
+  float vCosTheta = max(0.0, dot(normalize(lightDir), normalize(normal)));
+
+  resultColor = vec4(color * vCosTheta, 1.0);
 
 }

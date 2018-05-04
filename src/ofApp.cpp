@@ -74,6 +74,7 @@ void ofApp::update(){
       cam.end();
     geomShader.end();
   geomFbo.end();
+
     
 }
 
@@ -82,10 +83,12 @@ void ofApp::draw(){
 
   shader.begin();
     cam.begin();
+    shader.setUniform3f("lightPos", light.getPosition());
     shader.setUniformTexture("colorTex", geomFbo.getTexture(0), 0);
     shader.setUniformTexture("normalTex", geomFbo.getTexture(1), 1);
     shader.setUniformTexture("depthTex", geomFbo.getDepthTexture(), 2);
       logo.draw();
+      ofPoint lightScreenPos = cam.worldToScreen(light.getPosition());
     cam.end();
   shader.end();
   // geomFbo.getTexture(0).draw(0, 0);
@@ -100,6 +103,15 @@ void ofApp::draw(){
 
   ofDrawBitmapString(ss.str().c_str(), 10, 20);
   ss.str(string()); // clear ss
+  
+  ss << "light" << endl;
+  ofDrawBitmapString(ss.str().c_str(), lightScreenPos.x + 10, lightScreenPos.y + 10);
+
+  //  draw * for light
+  ofDrawLine(lightScreenPos.x +  5, lightScreenPos.y +  5, lightScreenPos.x + -5, lightScreenPos.y + -5);
+  ofDrawLine(lightScreenPos.x + -5, lightScreenPos.y +  5, lightScreenPos.x +  5, lightScreenPos.y + -5);
+  ofDrawLine(lightScreenPos.x, lightScreenPos.y +  5, lightScreenPos.x, lightScreenPos.y + -5);
+  ofDrawLine(lightScreenPos.x + -5, lightScreenPos.y, lightScreenPos.x + 5, lightScreenPos.y);
 
 }
 
